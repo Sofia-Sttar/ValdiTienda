@@ -17,6 +17,7 @@ function verificarDuplicados(email, telefono, callback) {
     });
 }
 
+
 // Registra al usuario con contraseña cifrada
 function registrarUsuario({ name, apellido_paterno, apellido_materno, email, password, telefono }, callback) {
     bcrypt.hash(password, 10, (err, hash) => {
