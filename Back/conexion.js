@@ -17,3 +17,6 @@ conexion.connect(function(error){
     }       
 });
 module.exports = conexion;
+// cerrar la conexión
+// ctrl + c
+// conexion.end();
