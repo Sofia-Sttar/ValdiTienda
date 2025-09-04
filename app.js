@@ -2,18 +2,41 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const conexion = require('./Back/conexion');
+const { registrarUsuario, verificarDuplicados } = require('./Back/singup');
 
 app.use(express.json());
-
-// Servir archivos estáticos (como index.html) desde la raíz
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/Font'));
 app.use(express.static(__dirname));
 
-// Ruta de prueba
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Aquí puedes agregar más rutas
+app.post('/signup', (req, res) => {
+    const { name, apellido_paterno, apellido_materno, email, password, confirm_password, telefono } = req.body;
+
+    // Validar que todos los campos estén presentes
+    if (!name || !apellido_paterno || !apellido_materno || !email || !password || !confirm_password || !telefono) {
+        return res.status(400).send('Todos los campos son obligatorios');
+    }
+
+    if (password !== confirm_password) {
+        return res.status(400).send('Las contraseñas no coinciden');
+    }
+
+    // Verificar duplicados por email o teléfono
+    verificarDuplicados(email, telefono, (err, duplicado) => {
+        if (err) return res.status(500).send('Error al verificar duplicados');
+        if (duplicado.email) return res.status(400).send('Este correo ya está registrado');
+        if (duplicado.telefono) return res.status(400).send('Este número de teléfono ya está registrado');
+
+        registrarUsuario({ name, apellido_paterno, apellido_materno, email, password, telefono }, (err, result) => {
+            if (err) return res.status(500).send('Error al registrar usuario');
+            res.send('Usuario registrado exitosamente');
+        });
+    });
+});
 
 app.listen(3000, () => {
     console.log('Servidor escuchando en puerto 3000');
