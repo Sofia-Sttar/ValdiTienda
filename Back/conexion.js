@@ -1,10 +1,12 @@
+require('dotenv').config();
 let mysql = require('mysql2');
 
 let conexion = mysql.createConnection({
-    host: 'localhost',
-    database: 'tiendapc',
-    user: 'root',
-    password: 'jjmd'
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    port: process.env.DB_PORT
 });
 
 conexion.connect(function(error){
@@ -15,4 +17,3 @@ conexion.connect(function(error){
     }       
 });
 module.exports = conexion;
-

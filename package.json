@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Sofia-Sttar/ValdiTienda#readme",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "mysql2": "^3.14.4"
   }
 }
